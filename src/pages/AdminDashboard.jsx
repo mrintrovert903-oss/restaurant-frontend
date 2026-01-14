@@ -97,130 +97,171 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-green-600 shadow-md p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold text-white">Admin Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <span className="text-white">Admin: {user?.name}</span>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gray-300">
+  
+  {/* Navbar */}
+  <nav className="bg-green-600/90 backdrop-blur-md shadow-md">
+    <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 className="text-2xl font-extrabold text-white tracking-wide">
+        Admin Dashboard
+      </h1>
 
-      <div className="container mx-auto p-6">
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-            {success}
-          </div>
-        )}
-
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-xl font-bold mb-4">Filter Reservations</h2>
-          <div className="flex gap-4">
-            <input
-              type="date"
-              value={filterDate}
-              onChange={(e) => setFilterDate(e.target.value)}
-              className="px-3 py-2 border rounded-lg"
-            />
-            <button
-              onClick={fetchByDate}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-            >
-              Filter by Date
-            </button>
-            <button
-              onClick={() => {
-                setFilterDate("");
-                fetchAllReservations();
-              }}
-              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-            >
-              Show All
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-xl font-bold mb-4">
-            All Reservations ({reservations.length})
-          </h2>
-
-          {reservations.length === 0 ? (
-            <p className="text-gray-600">No reservations found</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left p-2">Customer</th>
-                    <th className="text-left p-2">Email</th>
-                    <th className="text-left p-2">Table</th>
-                    <th className="text-left p-2">Date</th>
-                    <th className="text-left p-2">Time</th>
-                    <th className="text-left p-2">Guests</th>
-                    <th className="text-left p-2">Status</th>
-                    <th className="text-left p-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservations.map((reservation) => (
-                    <tr
-                      key={reservation._id}
-                      className="border-b hover:bg-gray-50"
-                    >
-                      <td className="p-2">{reservation.user?.name || 'N/A'}</td>
-                      <td className="p-2">{reservation.user?.email || 'N/A'}</td>
-                      <td className="p-2">
-                        Table {reservation.table?.tableNumber || 'N/A'}
-                      </td>
-                      <td className="p-2">
-                        {new Date(reservation.date).toLocaleDateString()}
-                      </td>
-                      <td className="p-2">{reservation.timeSlot}</td>
-                      <td className="p-2">{reservation.guests}</td>
-                      <td className="p-2">
-                        <span
-                          className={`px-2 py-1 rounded text-sm ${
-                            reservation.status === "active"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-red-100 text-red-800"
-                          }`}
-                        >
-                          {reservation.status}
-                        </span>
-                      </td>
-                      <td className="p-2">
-                        {reservation.status === "active" && (
-                          <button
-                            onClick={() => cancelReservation(reservation._id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-                          >
-                            Cancel
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+      <div className="flex items-center gap-4">
+        <span className="text-white text-sm">
+          Welcome, <span className="font-semibold">{user?.name}</span>
+        </span>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 px-4 py-2 rounded-lg text-white text-sm font-medium hover:bg-red-600 active:scale-95 transition"
+        >
+          Logout
+        </button>
       </div>
     </div>
+  </nav>
+
+  {/* Content */}
+  <div className="max-w-7xl mx-auto px-6 py-8">
+
+    {/* Alerts */}
+    {error && (
+      <div className="mb-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-red-700 text-sm">
+        {error}
+      </div>
+    )}
+
+    {success && (
+      <div className="mb-6 rounded-lg border border-green-300 bg-green-50 px-4 py-3 text-green-700 text-sm">
+        {success}
+      </div>
+    )}
+
+    {/* Filter Card */}
+    <div className="bg-white rounded-2xl shadow-md p-6 mb-8">
+      <h2 className="text-lg font-bold text-gray-800 mb-4">
+        Filter Reservations
+      </h2>
+
+      <div className="flex flex-wrap gap-4 items-center">
+        <input
+          type="date"
+          value={filterDate}
+          onChange={(e) => setFilterDate(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg "
+        />
+
+        <button
+          onClick={fetchByDate}
+          className="bg-green-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-gray-700 transition"
+        >
+          Filter
+        </button>
+
+        <button
+          onClick={() => {
+            setFilterDate("");
+            fetchAllReservations();
+          }}
+          className="bg-gray-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-gray-700 transition"
+        >
+          Show All
+        </button>
+      </div>
+    </div>
+
+    {/* Reservations Table */}
+    <div className="bg-white rounded-2xl shadow-md p-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-gray-800">
+          All Reservations
+        </h2>
+        <span className="text-sm text-gray-500">
+          Total: {reservations.length}
+        </span>
+      </div>
+
+      {reservations.length === 0 ? (
+        <p className="text-gray-600 text-sm">No reservations found</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-100 sticky top-0">
+              <tr>
+                {[
+                  "Customer",
+                  "Email",
+                  "Table",
+                  "Date",
+                  "Time",
+                  "Guests",
+                  "Status",
+                  "Actions",
+                ].map((head) => (
+                  <th
+                    key={head}
+                    className="text-left text-sm font-semibold text-gray-700 px-3 py-3"
+                  >
+                    {head}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+
+            <tbody>
+              {reservations.map((reservation, index) => (
+                <tr
+                  key={reservation._id}
+                  className={`border-b text-sm ${
+                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  } hover:bg-gray-300 transition`}
+                >
+                  <td className="px-3 py-2 font-medium">
+                    {reservation.user?.name || "N/A"}
+                  </td>
+                  <td className="px-3 py-2 text-gray-600">
+                    {reservation.user?.email || "N/A"}
+                  </td>
+                  <td className="px-3 py-2">
+                    Table {reservation.table?.tableNumber || "N/A"}
+                  </td>
+                  <td className="px-3 py-2">
+                    {new Date(reservation.date).toLocaleDateString()}
+                  </td>
+                  <td className="px-3 py-2">{reservation.timeSlot}</td>
+                  <td className="px-3 py-2">{reservation.guests}</td>
+                  <td className="px-3 py-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        reservation.status === "active"
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {reservation.status}
+                    </span>
+                  </td>
+                  <td className="px-3 py-2">
+                    {reservation.status === "active" && (
+                      <button
+                        onClick={() =>
+                          cancelReservation(reservation._id)
+                        }
+                        className="bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600 transition"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
   );
 };
 

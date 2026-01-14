@@ -4,7 +4,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import UserDashboard from "./pages/Userdashboard";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // const App = () => {
 //   const { user } = useAuth();
 // const role = user?.role;
@@ -46,6 +47,10 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+      />
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

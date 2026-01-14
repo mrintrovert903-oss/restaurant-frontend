@@ -225,7 +225,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/api'
-
+import { toast } from 'react-toastify';
 const Userdashboard = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -285,6 +285,7 @@ const timeSlots = [
 
   const createReservation = async () => {
     if (!selectedTable) {
+      toast.warn('Please select a table');
       setError('Please select a table');
       return;
     }
@@ -296,7 +297,8 @@ const timeSlots = [
         timeSlot,
         guests: parseInt(guests)
       });
-      setSuccess('Reservation created successfully!');
+      // setSuccess('Reservation created successfully!');
+      toast.success('Reservation created successfully!');
       setShowForm(false);
       setDate('');
       setTimeSlot('');
@@ -311,17 +313,25 @@ const timeSlots = [
   };
 
   const cancelReservation = async (id) => {
-    if (window.confirm('Are you sure you want to cancel this reservation?')) {
-      try {
-        await API.delete(`/api/reservations/${id}`);
-        setSuccess('Reservation cancelled');
-        fetchReservations();
-        setTimeout(() => setSuccess(''), 3000);
-      } catch (err) {
-        setError('Error cancelling reservation');
-      }
-    }
-  };
+  const confirmed = window.confirm(
+    "Are you sure you want to cancel this reservation?"
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await API.delete(`/api/reservations/${id}`);
+
+    toast.success("Reservation cancelled successfully");
+
+    fetchReservations();
+  } catch (err) {
+    toast.error(
+      err.response?.data?.message || "Error cancelling reservation"
+    );
+  }
+};
+
 
   const handleLogout = () => {
     logout();
@@ -363,7 +373,7 @@ const timeSlots = [
       </nav>
 
       <div className="container mx-auto p-6">
-        {error && (
+        {/* {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             {error}
           </div>
@@ -373,7 +383,7 @@ const timeSlots = [
           <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
             {success}
           </div>
-        )}
+        )} */}
 
         <button
           onClick={() => setShowForm(!showForm)}
